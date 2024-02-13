@@ -10,6 +10,7 @@ use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenTraits;
 use NunoMaduro\PhpInsights\Domain\Metrics\Architecture\Classes;
 use PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineLengthSniff;
 use PHP_CodeSniffer\Standards\Generic\Sniffs\Formatting\SpaceAfterNotSniff;
+use PHP_CodeSniffer\Standards\Generic\Sniffs\NamingConventions\UpperCaseConstantNameSniff;
 use SlevomatCodingStandard\Sniffs\Classes\SuperfluousExceptionNamingSniff;
 use SlevomatCodingStandard\Sniffs\Commenting\UselessFunctionDocCommentSniff;
 use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowEmptySniff;
@@ -22,7 +23,6 @@ use SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\ReturnTypeHintSniff;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Preset
@@ -107,6 +107,11 @@ return [
         LineLengthSniff::class => [
             'lineLimit' => 220,
             'absoluteLineLimit' => 220,
+        ],
+        UpperCaseConstantNameSniff::class => [
+            'exclude' => [
+                'app/Services/InstagramService.php',
+            ],
         ],
     ],
 
