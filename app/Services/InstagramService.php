@@ -15,9 +15,9 @@ class InstagramService
 
     public function getInstagramAccessTokenFromCode(string $code): string
     {
-        $response = Http::asForm()->post(self::INSTAGRAM_OAUTH_URL . '/oauth/access_token', [
-            'client_id' => config('instagram.client_id'),
-            'client_secret' => config('instagram.client_secret'),
+        $response = Http::asMultipart()->post(self::INSTAGRAM_OAUTH_URL . '/oauth/access_token', [
+            'client_id' => (string) config('instagram.client_id'), // @phpstan-ignore-line
+            'client_secret' => (string) config('instagram.client_secret'), // @phpstan-ignore-line
             'grant_type' => 'authorization_code',
             'redirect_url' => config('app.url') . '/auth/',
             'code' => $code,
