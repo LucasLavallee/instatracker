@@ -84,6 +84,8 @@ const triggerAuthorization = () => {
     instagramAuthUrl += '&scope=user_profile,user_media'
     instagramAuthUrl += '&response_type=code'
 
+    console.log(instagramAuthUrl)
+
     window.open(instagramAuthUrl)
 }
 
