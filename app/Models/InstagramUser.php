@@ -10,6 +10,12 @@ class InstagramUser extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'instagram_user_id',
+        'username',
+        'access_token',
+    ];
+
     /**
      * @var array<string, string>
      */
