@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\InstagramApiException;
 use App\Models\InstagramUser;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Safe\Exceptions\JsonException;
 use function Safe\json_decode;
@@ -91,7 +92,7 @@ class InstagramService
 
         $response = Http::get(self::INSTAGRAM_CONTENT_URL . '/' . $instagramUser->instagram_user_id . '/media', [
             'fields' => implode(',', $fieldsToCheck),
-            'access_token' => config('instagram.access_token'),
+            'access_token' => Crypt::decryptString($instagramUser->access_token),
         ]);
 
         if (!$response->successful()) {
