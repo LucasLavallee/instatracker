@@ -24,9 +24,9 @@ class InstagramUserRepository
             ->paginate(5, ['*'], 'page', $page);
     }
 
-    public function createInstagramUser(array $userData): void
+    public function createInstagramUser(array $userData): InstagramUser
     {
-        InstagramUser::firstOrCreate([
+        return InstagramUser::firstOrCreate([
             'instagram_user_id' => $userData['id'],
         ], [
             'username' => $userData['username'],
