@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\InstagramApiException;
 use App\Repositories\InstagramUserRepository;
 use App\Services\InstagramService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -14,7 +15,7 @@ class InstagramController extends Controller
     {
     }
 
-    public function authenticate(Request $request): void
+    public function authenticate(Request $request): RedirectResponse
     {
         /** @var string|null $code */
         $code = $request->code;
@@ -33,6 +34,8 @@ class InstagramController extends Controller
         $userData = $this->instagramService->getInstagramUserDetails($longLivedAccessToken);
         $this->instagramUserRepository->createInstagramUser($userData);
 
-        Log::info('A new instagram user has been created from OAuth process !');
+        Log::info('A new instagram user has been created from OAuth process: ' . $userData['username']);
+
+        return redirect('/');
     }
 }
