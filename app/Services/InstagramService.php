@@ -19,7 +19,7 @@ class InstagramService
             'client_id' => (string) config('instagram.client_id'), // @phpstan-ignore-line
             'client_secret' => (string) config('instagram.client_secret'), // @phpstan-ignore-line
             'grant_type' => 'authorization_code',
-            'redirect_url' => config('app.url') . '/auth/',
+            'redirect_uri' => config('app.url') . '/auth/',
             'code' => $code,
         ]);
 
