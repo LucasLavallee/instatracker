@@ -16,7 +16,7 @@ services:
             - "--entrypoints.ssl.address=:443"
             - "--certificatesresolvers.instaresolver.acme.httpchallenge=true"
             - "--certificatesresolvers.instaresolver.acme.httpchallenge.entrypoint=web"
-            - "--certificatesresolvers.instaresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory" # Comment for production
+            # - "--certificatesresolvers.instaresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory" # Comment for production
             - "--certificatesresolvers.instaresolver.acme.email=l.lavallee@thecodingmachine.com"
             - "--certificatesresolvers.instaresolver.acme.storage=/letsencrypt/acme.json"
         ports:
