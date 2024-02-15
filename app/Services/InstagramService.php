@@ -4,6 +4,9 @@ namespace App\Services;
 
 use App\Exceptions\InstagramApiException;
 use App\Models\InstagramUser;
+use App\Repositories\PostRepository;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Safe\Exceptions\JsonException;
@@ -13,6 +16,10 @@ class InstagramService
 {
     public const string INSTAGRAM_OAUTH_URL = 'https://api.instagram.com';
     public const string INSTAGRAM_CONTENT_URL = 'https://graph.instagram.com';
+
+    public function __construct(private PostRepository $postRepository)
+    {
+    }
 
     public function getInstagramAccessTokenFromCode(string $code): string
     {
@@ -133,5 +140,30 @@ class InstagramService
         }
 
         return $body['data'] ?? [];
+    }
+
+    public function getInstagramUsersPosts(Collection $instagramUsers): void
+    {
+        /** @var InstagramUser $instagramUser */
+        foreach ($instagramUsers as $instagramUser) {
+            $userPosts = $this->getUserPosts($instagramUser);
+
+            $postWithChildrens = [];
+            // To make sur to get all details, we must make additionnal calls for CAROUSEL_ALBUM media type
+            foreach ($userPosts as $userPost) {
+                if ($userPost['media_type'] === 'CAROUSEL_ALBUM') {
+                    $userPost['children'] = $this->getPostChildrens($userPost['id']);
+                }
+                $postWithChildrens[] = $userPost;
+            }
+
+            // Create / update posts
+            foreach ($postWithChildrens as $userPost) {
+                $this->postRepository->createOrUpdatePost($userPost, $instagramUser);
+            }
+
+            $instagramUser->last_posts_update = Carbon::now();
+            $instagramUser->save();
+        }
     }
 }

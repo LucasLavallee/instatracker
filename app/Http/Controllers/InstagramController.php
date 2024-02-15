@@ -32,9 +32,12 @@ class InstagramController extends Controller
 
         // Then we want to create a new InstagramUser for the given long lived access token
         $userData = $this->instagramService->getInstagramUserDetails($longLivedAccessToken);
-        $this->instagramUserRepository->createInstagramUser($userData);
+        $instagramUser = $this->instagramUserRepository->createInstagramUser($userData);
 
         Log::info('A new instagram user has been created from OAuth process: ' . $userData['username']);
+
+        // Here we can retrieve the posts for the newly create user
+        $this->instagramService->getInstagramUsersPosts(collect([$instagramUser]));
 
         return redirect('/');
     }

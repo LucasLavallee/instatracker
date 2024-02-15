@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
         // For test purpose, we can retrieve data from the instagram user related to the config('instagram.access_token') token
         if (config('instagram.access_token')) {
             $userData = $this->instagramService->getInstagramUserDetails(config('instagram.access_token'));
-            $this->instagramUserRepository->createInstagramUser($userData);
+            $instagramUser = $this->instagramUserRepository->createInstagramUser($userData);
+            $this->instagramService->getInstagramUsersPosts(collect([$instagramUser]));
         }
     }
 }
