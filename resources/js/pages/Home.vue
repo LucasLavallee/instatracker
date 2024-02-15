@@ -80,7 +80,7 @@ const getInstagramUsers = (page = 1) => {
 const triggerAuthorization = () => {
     let instagramAuthUrl = 'https://api.instagram.com/oauth/authorize'
     instagramAuthUrl += '?client_id=' + import.meta.env.VITE_INSTAGRAM_CLIENT_ID
-    instagramAuthUrl += '&redirect_uri='
+    instagramAuthUrl += '&redirect_uri=' + import.meta.env.VITE_APP_URL + '/auth/'
     instagramAuthUrl += '&scope=user_profile,user_media'
     instagramAuthUrl += '&response_type=code'
 
