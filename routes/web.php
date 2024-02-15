@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InstagramController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([
     'web',
 ])->group(function (): void {
+    Route::get('/oauth', [InstagramController::class, 'authenticate']);
+
     Route::get('/{any}', function () {
         return view('index');
     })->where('any', '.*');

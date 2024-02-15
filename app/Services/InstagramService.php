@@ -13,6 +13,50 @@ class InstagramService
     public const string INSTAGRAM_OAUTH_URL = 'https://api.instagram.com';
     public const string INSTAGRAM_CONTENT_URL = 'https://graph.instagram.com';
 
+    public function getInstagramAccessTokenFromCode(string $code): string
+    {
+        $response = Http::post(self::INSTAGRAM_OAUTH_URL . '/oauth/access_token', [
+            'client_id' => config('instagram.client_id'),
+            'client_secret' => config('instagram.client_secret'),
+            'grant_type' => 'authorization_code',
+            'redirect_url' => config('app.url') . '/auth/',
+            'code' => $code,
+        ]);
+
+        if (!$response->successful()) {
+            throw new InstagramApiException('[Instagram] Something bad happened when trying to get access token using code.');
+        }
+
+        $body = json_decode($response->body(), true);
+
+        if (!is_array($body)) {
+            throw new InstagramApiException('[Instagram] Something bad happened when trying to get access token using code. Array required.');
+        }
+
+        return $body['access_token'];
+    }
+
+    public function getInstagramLongLivedAccessToken(string $shortLivedAccessToken): string
+    {
+        $response = Http::get(self::INSTAGRAM_CONTENT_URL . '/access_token', [
+            'grant_type' => 'ig_exchange_token',
+            'client_secret' => config('instagram.client_secret'),
+            'access_token' => $shortLivedAccessToken,
+        ]);
+
+        if (!$response->successful()) {
+            throw new InstagramApiException('[Instagram] Something bad happened when trying to get long lived access token using access token.');
+        }
+
+        $body = json_decode($response->body(), true);
+
+        if (!is_array($body)) {
+            throw new InstagramApiException('[Instagram] Something bad happened when trying to get long lived access token using access token. Array required.');
+        }
+
+        return $body['access_token'];
+    }
+
     public function getInstagramUserDetails(string $longLiveToken): array
     {
         $fieldsToCheck = ['id', 'username'];
