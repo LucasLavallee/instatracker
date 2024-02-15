@@ -15,11 +15,11 @@
             </div>
 
             <div>
-                <div class="flex flex-1 justify-end">
+                <div class="flex flex-1 justify-end" v-if="instagramUsers.length > 0">
                     <p class="bg-rose-500 text-white rounded-full px-4">Total: {{ paginationData.total }}</p>
                 </div>
 
-                <ul role="list" class="divide-y divide-gray-100">
+                <ul role="list" class="divide-y divide-gray-100" v-if="instagramUsers.length > 0">
                     <li v-for="person in instagramUsers" :key="person.username">
                         <router-link :to="'/instagram-users/' + person.id" class="flex justify-between gap-x-6 py-5">
                             <div class="flex min-w-0 gap-x-4">
@@ -38,6 +38,8 @@
                         </router-link>
                     </li>
                 </ul>
+
+                <p class="text-center mb-6 text-sm text-gray-600">Aucun utilisateurs Instagram pour le moment.</p>
 
                 <pagination
                     :pagination-data="paginationData"
