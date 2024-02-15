@@ -15,7 +15,7 @@ class InstagramService
 
     public function getInstagramAccessTokenFromCode(string $code): string
     {
-        $response = Http::post(self::INSTAGRAM_OAUTH_URL . '/oauth/access_token', [
+        $response = Http::asForm()->post(self::INSTAGRAM_OAUTH_URL . '/oauth/access_token', [
             'client_id' => config('instagram.client_id'),
             'client_secret' => config('instagram.client_secret'),
             'grant_type' => 'authorization_code',
