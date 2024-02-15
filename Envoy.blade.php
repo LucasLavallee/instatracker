@@ -29,7 +29,6 @@ php artisan down --retry=300
 
 @task('migrate')
 php artisan migrate --force
-php artisan tenants:migrate --force
 @endtask
 
 @task('link')
