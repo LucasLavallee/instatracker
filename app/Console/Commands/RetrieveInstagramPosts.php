@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Exceptions\InstagramApiException;
+use App\Models\InstagramUser;
 use App\Repositories\PostRepository;
 use App\Services\InstagramService;
 use Illuminate\Console\Command;
@@ -35,20 +36,24 @@ class RetrieveInstagramPosts extends Command
      */
     public function handle(): void
     {
-        $userPosts = $this->instagramService->getUserPosts();
+        $instagramUsers = InstagramUser::all();
 
-        $postWithChildrens = [];
-        // To make sur to get all details, we must make additionnal calls for CAROUSEL_ALBUM media type
-        foreach ($userPosts as $userPost) {
-            if ($userPost['media_type'] === 'CAROUSEL_ALBUM') {
-                $userPost['children'] = $this->instagramService->getPostChildrens($userPost['id']);
+        foreach ($instagramUsers as $instagramUser) {
+            $userPosts = $this->instagramService->getUserPosts($instagramUser);
+
+            $postWithChildrens = [];
+            // To make sur to get all details, we must make additionnal calls for CAROUSEL_ALBUM media type
+            foreach ($userPosts as $userPost) {
+                if ($userPost['media_type'] === 'CAROUSEL_ALBUM') {
+                    $userPost['children'] = $this->instagramService->getPostChildrens($userPost['id']);
+                }
+                $postWithChildrens[] = $userPost;
             }
-            $postWithChildrens[] = $userPost;
-        }
 
-        // Create / update posts
-        foreach ($postWithChildrens as $userPost) {
-            $this->postRepository->createOrUpdatePost($userPost);
+            // Create / update posts
+            foreach ($postWithChildrens as $userPost) {
+                $this->postRepository->createOrUpdatePost($userPost, $instagramUser);
+            }
         }
     }
 }

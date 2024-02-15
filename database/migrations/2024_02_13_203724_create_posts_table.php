@@ -17,10 +17,11 @@ return new class() extends Migration {
             $table->text('caption')->nullable();
             $table->enum('media_type', ['IMAGE', 'VIDEO', 'CAROUSEL_ALBUM']);
             $table->string('permalink', 100);
-            $table->string('username', 50);
             $table->dateTime('timestamp');
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('posts');
+            $table->unsignedBigInteger('instagram_user_id')->nullable();
+            $table->foreign('instagram_user_id')->references('id')->on('instagram_users');
             $table->timestamps();
         });
     }

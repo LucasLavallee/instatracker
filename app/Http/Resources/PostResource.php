@@ -22,7 +22,6 @@ class PostResource extends JsonResource
             'media_url' => $this->media_url,
             'caption' => $this->caption,
             'permalink' => $this->permalink,
-            'username' => $this->username,
             'timestamp' => $this->timestamp,
             'children' => $this->children->isNotEmpty() ? PostResource::collection($this->children) : null,
         ];

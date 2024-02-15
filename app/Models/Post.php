@@ -18,7 +18,13 @@ class Post extends Model
         'media_type',
         'permalink',
         'timestamp',
-        'username',
+    ];
+
+    /**
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'timestamp' => 'datetime',
     ];
 
     public function parent(): BelongsTo
@@ -29,5 +35,10 @@ class Post extends Model
     public function children(): HasMany
     {
         return $this->hasMany(Post::class, 'parent_id');
+    }
+
+    public function instagramUser(): BelongsTo
+    {
+        return $this->belongsTo(InstagramUser::class);
     }
 }
