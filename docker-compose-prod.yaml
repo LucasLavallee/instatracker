@@ -1,0 +1,69 @@
+version: "3.8"
+
+services:
+    traefik:
+        container_name: instatracker_traefik
+        image: traefik:v3.0
+        command:
+          - --providers.docker
+            - --providers.docker.exposedByDefault=false
+            - --log.level=DEBUG
+            - --entryPoints.web.address=:80
+            - --entrypoints.other.address=:9000
+        ports:
+            - "80:80"
+            - "8080:8080"
+            - "9000:9000"
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.traefik.rule=Host(`traefik.${HOST_NAME}`)
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+
+    web:
+        container_name: instatracker_web
+        image: thecodingmachine/php:8.3-v4-apache-node20
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.web.priority=9
+            - traefik.http.routers.web.rule=Host(`$DOMAIN`)
+            - traefik.http.routers.web.entrypoints=web
+        environment:
+            APACHE_DOCUMENT_ROOT: public
+            APACHE_EXTENSIONS_HTTP2: 1
+            PHP_EXTENSION_XDEBUG: 0
+            PHP_INI_EXPOSE_PHP: 0
+            PHP_INI_DISPLAY_STARTUP_ERRORS: 0
+            PHP_INI_MEMORY_LIMIT: "2G"
+            DB_CONNECTION: "$DB_CONNECTION"
+            DB_HOST: "$DB_HOST"
+            DB_PORT: "$DB_PORT"
+            DB_DATABASE: "$DB_DATABASE"
+            VITE_INSTAGRAM_CLIENT_ID: "$INSTAGRAM_CLIENT_ID"
+            CRON_USER: root
+            CRON_SCHEDULE: "* * * * *"
+            CRON_COMMAND: php artisan schedule:run >> /dev/null 2>&1
+            STARTUP_COMMAND_1: composer install
+            STARTUP_COMMAND_2: envoy run web-production-setup
+        working_dir: /var/www/html
+        volumes:
+            - ./:/var/www/html
+        env_file:
+          - ./.env
+
+    mysql:
+        container_name: instatracker_mysql
+        image: mysql:8.1
+        command: --init-file /data/application/init.sql
+        volumes:
+            - mysql_data:/var/lib/mysql
+            - ./init.sql:/data/application/init.sql:rw
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_HOST: '%'
+
+volumes:
+    mysql_data:
+        driver: local
