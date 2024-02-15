@@ -9,9 +9,10 @@ use Illuminate\Support\Carbon;
 
 class PostRepository
 {
-    public function getPosts(int $page = 1): LengthAwarePaginator
+    public function getInstagramUserPosts(string $instagramUserId, int $page = 1): LengthAwarePaginator
     {
         return Post::whereNull('parent_id')
+            ->where('instagram_user_id', $instagramUserId)
             ->orderBy('timestamp', 'DESC')
             ->paginate(10, ['*'], 'page', $page);
     }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\PostsController;
+use App\Http\Controllers\Api\InstagramUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware([])->group(function () {
-    Route::get('posts', [PostsController::class, 'index']);
-    Route::get('posts/{post}', [PostsController::class, 'show']);
+Route::middleware(['api'])->group(function () {
+    Route::get('/instagram-users', [InstagramUserController::class, 'index']);
+    Route::get('/instagram-users/{instagramUserId}', [InstagramUserController::class, 'show']);
+    Route::get('/instagram-users/{instagramUserId}/posts', [InstagramUserController::class, 'showPosts']);
 });

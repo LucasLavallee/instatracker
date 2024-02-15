@@ -117,6 +117,7 @@ return [
         UnusedParameterSniff::class => [
             'exclude' => [
                 'app/Http/Resources/PostResource.php',
+                'app/Http/Resources/InstagramUserResource.php',
             ],
         ],
     ],

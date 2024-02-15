@@ -79,12 +79,12 @@ Before each commit, please make sure you run the following commands:
 * `php artisan ide-helper:meta` PhpStorm Meta file
 
 ```bash
-npm install
+yarn
 ```
 
 Then you can build the tool with the following command :
 
 ```bash
-npm run dev # For development
-npm run prod # For production
+yarn watch # For development
+yarn build # For production
 ```

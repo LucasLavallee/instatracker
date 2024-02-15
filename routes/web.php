@@ -12,11 +12,17 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::middleware([
+    'web',
+])->group(function (): void {
+    Route::get('/{any}', function () {
+        return view('index');
+    })->where('any', '.*');
 
-Route::get('/', function () {
-    return view('index');
+    //    Route::get('/instagram-users', [InstagramUserController::class, 'index']);
+
+    // Not found
+    //    Route::get('/{pathMatch}', function () {
+    //        return view('index');
+    //    })->where('pathMatch', '.*');
 });
-
-Route::get('/{pathMatch}', function () {
-    return view('index');
-})->where('pathMatch', '.*');

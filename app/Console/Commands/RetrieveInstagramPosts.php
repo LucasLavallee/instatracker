@@ -6,6 +6,7 @@ use App\Exceptions\InstagramApiException;
 use App\Models\InstagramUser;
 use App\Repositories\PostRepository;
 use App\Services\InstagramService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class RetrieveInstagramPosts extends Command
@@ -54,6 +55,9 @@ class RetrieveInstagramPosts extends Command
             foreach ($postWithChildrens as $userPost) {
                 $this->postRepository->createOrUpdatePost($userPost, $instagramUser);
             }
+
+            $instagramUser->last_posts_update = Carbon::now();
+            $instagramUser->save();
         }
     }
 }

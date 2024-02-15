@@ -18,8 +18,8 @@ class PostResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'media_type' => $this->media_type,
-            'media_url' => $this->media_url,
+            'mediaType' => $this->media_type,
+            'mediaUrl' => $this->media_url,
             'caption' => $this->caption,
             'permalink' => $this->permalink,
             'timestamp' => $this->timestamp,

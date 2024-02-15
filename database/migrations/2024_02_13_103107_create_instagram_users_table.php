@@ -15,6 +15,7 @@ return new class() extends Migration {
             $table->string('instagram_user_id', 20);
             $table->string('username', 100);
             $table->text('access_token');
+            $table->dateTime('last_posts_update')->nullable();
             $table->timestamps();
         });
     }
