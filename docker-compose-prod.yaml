@@ -8,16 +8,27 @@ services:
             - --providers.docker
             - --providers.docker.exposedByDefault=false
             - --log.level=DEBUG
-            - --entryPoints.web.address=:80
             - --entrypoints.other.address=:9000
+            - "--entrypoints.web.address=:80"
+            - "--entrypoints.web.http.redirections.entryPoint.to=ssl"
+            - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+            - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+            - "--entrypoints.ssl.address=:443"
+            - "--certificatesresolvers.instaresolver.acme.httpchallenge=true"
+            - "--certificatesresolvers.instaresolver.acme.httpchallenge.entrypoint=web"
+            - "--certificatesresolvers.instaresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory" # Comment for production
+            - "--certificatesresolvers.instaresolver.acme.email=l.lavallee@thecodingmachine.com"
+            - "--certificatesresolvers.instaresolver.acme.storage=/letsencrypt/acme.json"
         ports:
             - "80:80"
             - "8080:8080"
             - "9000:9000"
+            - "443:443"
         labels:
             - traefik.enable=true
             - traefik.http.routers.traefik.rule=Host(`traefik.${HOST_NAME}`)
         volumes:
+            - "./letsencrypt:/letsencrypt"
             - /var/run/docker.sock:/var/run/docker.sock
 
     web:
@@ -27,7 +38,9 @@ services:
             - traefik.enable=true
             - traefik.http.routers.web.priority=9
             - traefik.http.routers.web.rule=Host(`$DOMAIN`)
-            - traefik.http.routers.web.entrypoints=web
+            - traefik.http.routers.web.entrypoints=web,ssl
+            - traefik.http.routers.web.tls=true
+            - traefik.http.routers.web.tls.certresolver=instaresolver
         environment:
             APACHE_DOCUMENT_ROOT: public
             APACHE_EXTENSIONS_HTTP2: 1
