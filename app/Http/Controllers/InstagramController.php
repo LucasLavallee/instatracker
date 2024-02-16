@@ -43,4 +43,9 @@ class InstagramController extends Controller
 
         return redirect('/');
     }
+
+    public function deleteData(): RedirectResponse
+    {
+        return redirect('/');
+    }
 }
