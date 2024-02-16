@@ -23,6 +23,7 @@ class InstagramService
 
     public function getInstagramAccessTokenFromCode(string $code): string
     {
+        // https://developers.facebook.com/docs/instagram-basic-display-api/guides/getting-access-tokens-and-permissions
         $response = Http::asMultipart()->post(self::INSTAGRAM_OAUTH_URL . '/oauth/access_token', [
             'client_id' => (string) config('instagram.client_id'), // @phpstan-ignore-line
             'client_secret' => (string) config('instagram.client_secret'), // @phpstan-ignore-line
@@ -44,8 +45,9 @@ class InstagramService
         return $body['access_token'];
     }
 
-    public function getInstagramLongLivedAccessToken(string $shortLivedAccessToken): string
+    public function getInstagramLongLivedAccessToken(string $shortLivedAccessToken): array
     {
+        // https://developers.facebook.com/docs/instagram-basic-display-api/overview#instagram-user-access-tokens
         $response = Http::get(self::INSTAGRAM_CONTENT_URL . '/access_token', [
             'grant_type' => 'ig_exchange_token',
             'client_secret' => config('instagram.client_secret'),
@@ -62,11 +64,12 @@ class InstagramService
             throw new InstagramApiException('[Instagram] Something bad happened when trying to get long lived access token using access token. Array required.');
         }
 
-        return $body['access_token'];
+        return $body;
     }
 
     public function getInstagramUserDetails(string $longLiveToken): array
     {
+        // https://developers.facebook.com/docs/instagram-basic-display-api/reference/me
         $fieldsToCheck = ['id', 'username'];
 
         $response = Http::get(self::INSTAGRAM_CONTENT_URL . '/me', [
@@ -95,6 +98,7 @@ class InstagramService
      */
     public function getUserPosts(InstagramUser $instagramUser): array
     {
+        // https://developers.facebook.com/docs/instagram-basic-display-api/reference/user/media#reading
         $fieldsToCheck = ['id', 'media_url', 'caption', 'media_type', 'permalink', 'thumbnail_url', 'timestamp', 'username', 'children'];
 
         $response = Http::get(self::INSTAGRAM_CONTENT_URL . '/' . $instagramUser->instagram_user_id . '/media', [
@@ -122,6 +126,7 @@ class InstagramService
      */
     public function getPostChildrens(string $postId): array
     {
+        // https://developers.facebook.com/docs/instagram-basic-display-api/reference/media/children#reading
         $fieldsToCheck = ['id', 'media_url', 'media_type', 'permalink', 'thumbnail_url', 'timestamp', 'username', 'children'];
 
         $response = Http::get(self::INSTAGRAM_CONTENT_URL . "/{$postId}/children", [
@@ -165,5 +170,26 @@ class InstagramService
             $instagramUser->last_posts_update = Carbon::now();
             $instagramUser->save();
         }
+    }
+
+    public function refreshAccessToken(string $longLivedAccessToken): array
+    {
+        // https://developers.facebook.com/docs/instagram-basic-display-api/guides/long-lived-access-tokens#get-a-long-lived-token
+        $response = Http::get(self::INSTAGRAM_CONTENT_URL . '/refresh_access_token', [
+            'grant_type' => 'ig_refresh_token',
+            'access_token' => $longLivedAccessToken,
+        ]);
+
+        if (!$response->successful()) {
+            throw new InstagramApiException('[Instagram] Something bad happened when trying to refresh long lived access token.');
+        }
+
+        $body = json_decode($response->body(), true);
+
+        if (!is_array($body)) {
+            throw new InstagramApiException('[Instagram] Something bad happened when trying to refresh long lived access token. Array required.');
+        }
+
+        return $body;
     }
 }

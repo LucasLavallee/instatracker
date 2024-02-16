@@ -14,6 +14,7 @@ class InstagramUser extends Model
         'instagram_user_id',
         'username',
         'access_token',
+        'token_expiration_date',
     ];
 
     /**
