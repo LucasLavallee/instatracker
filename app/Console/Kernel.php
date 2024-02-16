@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('app:retrieve-instagram-posts')->hourly();
+        $schedule->command('app:refresh-instagram-users-access-tokens')->daily();
     }
 
     /**
