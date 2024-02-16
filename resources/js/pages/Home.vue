@@ -4,7 +4,7 @@
             <div class="pb-2 mb-6 border-b-2">
                 <h1 class="text-3xl font-bold tracking-tight text-gray-900">Liste des utilisateurs</h1>
                 <p class="text-sm leading-6 text-gray-500">Liste des utilisateurs ayant autorisés la récupération de leur posts Instagram. </p>
-                <p class="text-sm leading-6 text-gray-500">(only on prod) : Si vous souhaitez apparaitre dans cette liste, cliquez <span class="underline font-semibold text-rose-600 cursor-pointer" @click="triggerAuthorization">ici</span></p>
+                <p class="text-sm leading-6 text-gray-500">Si vous souhaitez apparaitre dans cette liste, cliquez <span class="underline font-semibold text-rose-600 cursor-pointer" @click="triggerAuthorization">ici</span></p>
             </div>
 
             <div type="button" v-if="listLoading">
@@ -39,7 +39,7 @@
                     </li>
                 </ul>
 
-                <p class="text-center mb-6 text-sm text-gray-600">Aucun utilisateurs Instagram pour le moment.</p>
+                <p class="text-center mb-6 text-sm text-gray-600" v-if="instagramUsers.length === 0">Aucun utilisateurs Instagram pour le moment.</p>
 
                 <pagination
                     :pagination-data="paginationData"
