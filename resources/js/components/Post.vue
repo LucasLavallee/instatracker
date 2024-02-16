@@ -36,6 +36,8 @@ const currentMediaUrl = computed(() => {
         return props.post.mediaUrl
     } else if(props.post.mediaType === 'CAROUSEL_ALBUM') {
         return props.post.children[currentCarouselAlbumItem.value].mediaUrl
+    } else { // VIDEO
+        return props.post.thumbnailUrl
     }
 })
 

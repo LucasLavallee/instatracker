@@ -20,6 +20,7 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'mediaType' => $this->media_type,
             'mediaUrl' => $this->media_url,
+            'thumbnailUrl' => $this->thumbnail_url,
             'caption' => $this->caption,
             'permalink' => $this->permalink,
             'timestamp' => $this->timestamp,
