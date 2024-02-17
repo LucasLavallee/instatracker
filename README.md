@@ -14,6 +14,16 @@ Start by cloning this repository, at the root directory run the following comman
 cp .env.example .env
 ```
 
+Fill the following variables to make sure to retrieve test users posts. To get an access token for test purpose, please follow these steps (Générateur de token d’utilisateur·ice section): https://developers.facebook.com/docs/instagram-basic-display-api/overview
+
+```bash
+INSTAGRAM_ACCESS_TOKEN=
+INSTAGRAM_CLIENT_ID=
+INSTAGRAM_CLIENT_SECRET=
+```
+
+Then ...
+
 ```bash
 docker compose up -d
 ```
@@ -39,7 +49,7 @@ First time on the project, you must run migration
 php artisan migrate
 ```
 
-If you want data in your database, you can run seed
+If you want data in your database, you can run seed. Seeders will create an InstagramUser using the given __INSTAGRAM_ACCESS_TOKEN__ filled before in .env
 ```bash
 php artisan db:seed
 ```
