@@ -70,7 +70,9 @@ const { formatDate } = useDateHelpers()
 const getInstagramUsers = (page = 1) => {
     listLoading.value = true
 
-    axios.get('/api/instagram-users', {params: {page}}).then(response => {
+    axios.defaults.withCredentials = true
+
+    axios.get('/api/front/instagram-users', {params: {page}}).then(response => {
         paginationData.value = response.data.pagination
         instagramUsers.value = response.data.instagramUsers
         listLoading.value = false

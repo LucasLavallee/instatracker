@@ -55,7 +55,7 @@ const paginationData = ref({
 const getInstagramUserDetails = () => {
     loading.value = true
 
-    axios.get('/api/instagram-users/' + route.params.id).then(response => {
+    axios.get('/api/front/instagram-users/' + route.params.id).then(response => {
         instagramUser.value = response.data.instagramUser
         loading.value = false
     }).catch(error => {
@@ -66,7 +66,7 @@ const getInstagramUserDetails = () => {
 const getInstagramUserPosts = (page = 1) => {
     loading.value = true
 
-    axios.get('/api/instagram-users/' + route.params.id + '/posts', {params: {page}}).then(response => {
+    axios.get('/api/front/instagram-users/' + route.params.id + '/posts', {params: {page}}).then(response => {
         posts.value = response.data.posts
         paginationData.value = response.data.pagination
         loading.value = false
