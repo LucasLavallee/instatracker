@@ -38,7 +38,7 @@ class InstagramController extends Controller
 
         Log::info('A new instagram user has been created from OAuth process: ' . $userData['username']);
 
-        // Here we can retrieve the posts for the newly create user
+        // Here we can retrieve the posts for the newly created user
         $this->instagramService->getInstagramUsersPosts(collect([$instagramUser]));
 
         return redirect('/');
