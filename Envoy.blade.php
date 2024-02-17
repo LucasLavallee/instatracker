@@ -4,6 +4,7 @@
 composer
 link
 cache
+yarn-dev
 @endstory
 
 @story('web-production-setup')
@@ -21,6 +22,11 @@ composer install
 
 @task('up')
 php artisan up
+@endtask
+
+@task('yarn-dev')
+yarn
+yarn build
 @endtask
 
 @task('down')
