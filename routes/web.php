@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InstagramController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,7 +13,12 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::middleware([
+    'web',
+])->group(function (): void {
+    Route::get('/auth', [InstagramController::class, 'authenticate']);
 
-Route::get('/', function () {
-    return view('welcome');
+    Route::get('/{any}', function () {
+        return view('index');
+    })->where('any', '.*');
 });
