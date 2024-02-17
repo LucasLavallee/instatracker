@@ -18,10 +18,7 @@ Route::middleware([
 ])->group(function (): void {
     Route::get('/auth', [InstagramController::class, 'authenticate']);
 
-    Route::get('/delete-data/', [InstagramController::class, 'deleteData']);
-
     Route::get('/{any}', function () {
         return view('index');
     })->where('any', '.*');
-
 });

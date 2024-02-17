@@ -24,6 +24,7 @@ class PostRepository
         ]);
 
         $post->media_url = $postData['media_url'];
+        $post->thumbnail_url = $postData['thumbnail_url'] ?? null;
         $post->caption = $postData['caption'] ?? null;
         $post->media_type = $postData['media_type'];
         $post->permalink = $postData['permalink'];

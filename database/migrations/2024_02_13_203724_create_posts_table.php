@@ -14,6 +14,7 @@ return new class() extends Migration {
             $table->id();
             $table->string('instagram_post_id', 20);
             $table->text('media_url');
+            $table->text('thumbnail_url')->nullable();
             $table->text('caption')->nullable();
             $table->enum('media_type', ['IMAGE', 'VIDEO', 'CAROUSEL_ALBUM']);
             $table->string('permalink', 100);
