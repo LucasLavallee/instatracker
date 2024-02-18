@@ -44,7 +44,7 @@ docker compose down
 docker compose up -d
 ```
 
-First time on the project, you must run migration
+First time on the project, you must run migration from your container
 ```bash
 php artisan migrate
 ```
@@ -58,6 +58,8 @@ Feel free to use the following command to reset your database to initial state (
 ```bash
 php artisan migrate:fresh --seed
 ```
+
+Then build
 
 ## Project details
 
