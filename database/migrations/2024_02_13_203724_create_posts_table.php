@@ -20,9 +20,15 @@ return new class() extends Migration {
             $table->string('permalink', 100);
             $table->dateTime('timestamp');
             $table->unsignedBigInteger('parent_id')->nullable();
-            $table->foreign('parent_id')->references('id')->on('posts');
+            $table->foreign('parent_id')
+                ->references('id')
+                ->on('posts')
+                ->onDelete('cascade');
             $table->unsignedBigInteger('instagram_user_id')->nullable();
-            $table->foreign('instagram_user_id')->references('id')->on('instagram_users');
+            $table->foreign('instagram_user_id')
+                ->references('id')
+                ->on('instagram_users')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
