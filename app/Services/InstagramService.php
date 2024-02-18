@@ -116,8 +116,8 @@ class InstagramService
             throw new InstagramApiException('[Instagram] Something bad happened when trying to retrieve childrens details. Array required.');
         }
 
-        // Here, for test purpose, we retrieve only 10 posts from the API
-        return isset($body['data']) ? array_slice($body['data'], 0, 10) : [];
+        // Here, for test purpose, we retrieve only 20 posts from the API
+        return isset($body['data']) ? array_slice($body['data'], 0, 20) : [];
     }
 
     /**
