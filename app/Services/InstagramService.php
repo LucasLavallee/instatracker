@@ -6,6 +6,7 @@ use App\Exceptions\InstagramApiException;
 use App\Models\InstagramUser;
 use App\Repositories\PostRepository;
 use Carbon\Carbon;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
@@ -45,6 +46,10 @@ class InstagramService
         return $body['access_token'];
     }
 
+    /**
+     * @throws InstagramApiException
+     * @throws JsonException
+     */
     public function getInstagramLongLivedAccessToken(string $shortLivedAccessToken): array
     {
         // https://developers.facebook.com/docs/instagram-basic-display-api/overview#instagram-user-access-tokens
@@ -54,19 +59,12 @@ class InstagramService
             'access_token' => $shortLivedAccessToken,
         ]);
 
-        if (!$response->successful()) {
-            throw new InstagramApiException('[Instagram] Something bad happened when trying to get long lived access token using access token.');
-        }
-
-        $body = json_decode($response->body(), true);
-
-        if (!is_array($body)) {
-            throw new InstagramApiException('[Instagram] Something bad happened when trying to get long lived access token using access token. Array required.');
-        }
-
-        return $body;
+        return $this->handleApiResponses($response, '[Instagram] Something bad happened when trying to get long lived access token using access token.');
     }
 
+    /**
+     * @throws InstagramApiException
+     */
     public function getInstagramUserDetails(string $longLiveToken): array
     {
         // https://developers.facebook.com/docs/instagram-basic-display-api/reference/me
@@ -77,16 +75,7 @@ class InstagramService
             'access_token' => config('instagram.access_token'),
         ]);
 
-        if (!$response->successful()) {
-            throw new InstagramApiException('[Instagram] Something bad happened when trying to retrieve instagram user details.');
-        }
-
-        $body = json_decode($response->body(), true);
-
-        if (!is_array($body)) {
-            throw new InstagramApiException('[Instagram] Something bad happened when trying to retrieve instagram user details. Array required.');
-        }
-
+        $body = $this->handleApiResponses($response, '[Instagram] Something bad happened when trying to retrieve instagram user details.');
         $body['access_token'] = $longLiveToken;
 
         return $body;
@@ -106,15 +95,7 @@ class InstagramService
             'access_token' => Crypt::decryptString($instagramUser->access_token),
         ]);
 
-        if (!$response->successful()) {
-            throw new InstagramApiException('[Instagram] Something bad happened when trying to retrieve instagram medias.');
-        }
-
-        $body = json_decode($response->body(), true);
-
-        if (!is_array($body)) {
-            throw new InstagramApiException('[Instagram] Something bad happened when trying to retrieve childrens details. Array required.');
-        }
+        $body = $this->handleApiResponses($response, '[Instagram] Something bad happened when trying to retrieve instagram medias.');
 
         // Here, for test purpose, we retrieve only 20 posts from the API
         return isset($body['data']) ? array_slice($body['data'], 0, 20) : [];
@@ -134,15 +115,7 @@ class InstagramService
             'access_token' => config('instagram.access_token'),
         ]);
 
-        if (!$response->successful()) {
-            throw new InstagramApiException('[Instagram] Something bad happened when trying to retrieve childrens details.');
-        }
-
-        $body = json_decode($response->body(), true);
-
-        if (!is_array($body)) {
-            throw new InstagramApiException('[Instagram] Something bad happened when trying to retrieve childrens details. Array required.');
-        }
+        $body = $this->handleApiResponses($response, '[Instagram] Something bad happened when trying to retrieve childrens details.');
 
         return $body['data'] ?? [];
     }
@@ -180,14 +153,19 @@ class InstagramService
             'access_token' => $longLivedAccessToken,
         ]);
 
+        return $this->handleApiResponses($response, '[Instagram] Something bad happened when trying to refresh long lived access token.');
+    }
+
+    private function handleApiResponses(Response $response, string $errorMessage): array
+    {
         if (!$response->successful()) {
-            throw new InstagramApiException('[Instagram] Something bad happened when trying to refresh long lived access token.');
+            throw new InstagramApiException($errorMessage);
         }
 
         $body = json_decode($response->body(), true);
 
         if (!is_array($body)) {
-            throw new InstagramApiException('[Instagram] Something bad happened when trying to refresh long lived access token. Array required.');
+            throw new InstagramApiException($errorMessage . ' Array required.');
         }
 
         return $body;
